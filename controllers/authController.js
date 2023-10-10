@@ -2,6 +2,28 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
+// SignUp User
+// Sign up user
+export const createUser = async (req, res) => {
+  try {
+    const { name, email, username, password, avatar } = req.body;
+
+    // Check if the email or username already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email or username already exists' });
+    }
+
+    const newUser = new User({ name, email, username, avatar });
+    newUser.password = await bcrypt.hash(password, 10);
+    await newUser.save();
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server Error' });
+  }
+};
+
 // Login user
 export const loginUser = async (req, res) => {
   try {

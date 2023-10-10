@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
   email: {
     type: String,
     unique: [true, 'Email already exists!'],
@@ -17,6 +18,7 @@ const userSchema = new mongoose.Schema({
       message: 'Invalid email format',
     },
   },
+
   username: {
     type: String,
     required: [true, 'Username is required!'],
@@ -25,10 +27,24 @@ const userSchema = new mongoose.Schema({
       'Username invalid, it should contain 8-20 alphanumeric letters and be unique!',
     ],
   },
+
   password: {
     type: String,
     required: true,
     minlength: 6,
+  },
+
+  avatar: {
+    type: String,
+    validate: {
+      validator: function (value) {
+        // For example, you can check if value is a valid URL or if it's an image file path
+        return (
+          value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:image/')
+        );
+      },
+      message: 'Invalid avatar URL or image path',
+    },
   },
 });
 
