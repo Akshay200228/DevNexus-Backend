@@ -17,7 +17,7 @@ connectToMongoDB();
 app.use(express.json());
 
 // Define routes
-app.use('/users', userRoutes);
+app.use('/api/users', userRoutes);
 
 // Start the Express server
 app.listen(PORT, () => {

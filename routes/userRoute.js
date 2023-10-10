@@ -1,14 +1,15 @@
-// routes/users.js
 import express from 'express';
 import { createUser, getAllUsers } from '../controllers/userController.js';
+import { authenticate } from '../middlewares/authMiddleware.js';
+import { loginUser } from '../controllers/authController.js';
 
 const router = express.Router();
 
-
 // Create a new user
-router.post('/', createUser);
+router.post('/signup', createUser);
+router.post('/login', loginUser);
 
-// Get all users
-router.get('/', getAllUsers);
+// Get all users (protected route)
+router.get('/users', authenticate, getAllUsers);
 
 export default router;

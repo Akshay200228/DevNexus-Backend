@@ -8,6 +8,14 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: [true, 'Email already exists!'],
+    required: true,
+    validate: {
+      validator: (value) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(value);
+      },
+      message: 'Invalid email format',
+    },
   },
   username: {
     type: String,
@@ -16,6 +24,11 @@ const userSchema = new mongoose.Schema({
       /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/,
       'Username invalid, it should contain 8-20 alphanumeric letters and be unique!',
     ],
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
   },
 });
 
