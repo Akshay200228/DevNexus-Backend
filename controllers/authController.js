@@ -1,9 +1,9 @@
+// controllers/authController.js
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 // SignUp User
-// Sign up user
 export const createUser = async (req, res) => {
   try {
     const { name, email, username, password, avatar } = req.body;
@@ -43,9 +43,15 @@ export const loginUser = async (req, res) => {
     }
 
     // Generate and send an authentication token (e.g., JWT) to the client
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h', // Token expiration time
-    });
+    const token = jwt.sign(
+      {
+        userId: user._id
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '10h', // Token expiration time
+      }
+    );
 
     res.status(200).json({ message: 'Login successful', token });
   } catch (error) {

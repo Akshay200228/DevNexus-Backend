@@ -10,6 +10,6 @@ router.post('/signup', createUser);
 router.post('/login', loginUser);
 
 // Get all users (protected route)
-router.get('/users', authenticate, getAllUsers);
+router.get('/', getAllUsers);
 
 export default router;
