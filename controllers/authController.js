@@ -18,7 +18,17 @@ export const createUser = async (req, res) => {
     const newUser = new User({ name, email, username, avatar });
     newUser.password = await bcrypt.hash(password, 10);
     await newUser.save();
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ 
+      message: 'User registered successfully',
+      user: {
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        username: newUser.username,
+        avatar: newUser.avatar,
+        // Add other user data fields as needed
+      }
+    });
   } catch (error) {
     res.status(500).json({ error: 'Server Error' });
   }
@@ -49,11 +59,11 @@ export const loginUser = async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: '10h', // Token expiration time
+        expiresIn: '7d', // Token expiration time
       }
     );
 
-    res.status(200).json({ message: 'Login successful', token });
+    res.status(200).json({ message: 'Login successful', token, user: user });
   } catch (error) {
     res.status(500).json({ error: 'Server Error' });
   }
