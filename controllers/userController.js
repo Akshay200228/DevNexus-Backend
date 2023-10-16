@@ -18,10 +18,12 @@ export const getAllUsers = async (req, res) => {
 // Get a single user by ID
 export const getSingleUser = async (req, res) => {
   try {
-    // Assuming you're using the user ID from the request parameters
-    const userId = req.params.id;
+    const userId = req.params.id; // Assuming the user ID is part of the request parameters
 
-    // Fetch user details based on the userId
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
     const user = await User.findById(userId);
 
     if (!user) {

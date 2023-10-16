@@ -18,7 +18,7 @@ export const createUser = async (req, res) => {
     const newUser = new User({ name, email, username, avatar });
     newUser.password = await bcrypt.hash(password, 10);
     await newUser.save();
-    res.status(201).json({ 
+    res.status(201).json({
       message: 'User registered successfully',
       user: {
         _id: newUser._id,
@@ -63,7 +63,15 @@ export const loginUser = async (req, res) => {
       }
     );
 
-    res.status(200).json({ message: 'Login successful', token, user: user });
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      }
+    });
   } catch (error) {
     res.status(500).json({ error: 'Server Error' });
   }

@@ -20,7 +20,10 @@ export const authenticate = (req, res, next) => {
       console.log('Token decoded:', decoded);
   
       req.user = decoded; 
+
       next();
+
+      console.log("Sucessfull")
   
     } catch (err) {
       console.log('Error decoding token:', err)
