@@ -1,3 +1,5 @@
+// User schema
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -46,6 +48,14 @@ const userSchema = new mongoose.Schema({
       message: 'Invalid avatar URL or image path',
     },
   },
+
+  // Add any other user-specific fields here
+  codeComponents: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CodeComponent', // Reference to CodeComponent model
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);
