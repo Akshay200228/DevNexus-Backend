@@ -1,19 +1,26 @@
 // controllers/codeComponentController.js
+
 import CodeComponent from '../models/CodeComponent.js';
 
 // Create a new code component
 export const createCodeComponent = async (req, res) => {
     try {
+        // Check if the request is unauthorized
         if (!req.userId) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-
+        // Extract data from the request body
         const { title, description, code } = req.body;
-        const createdBy = req.userId; // Assuming you set the user's ID in the request object during authentication
+        // Get the user ID of the creator from the request
+        const createdBy = req.userId;
+        // Create a new CodeComponent instance
         const newCodeComponent = new CodeComponent({ title, description, code, createdBy });
+        // Save the new code component to the database
         await newCodeComponent.save();
+        // Return a success response with the created code component
         res.status(201).json(newCodeComponent);
     } catch (error) {
+        // Handle server error and return an error response
         res.status(500).json({ error: 'Server Error' });
     }
 };
