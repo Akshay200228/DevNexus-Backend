@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import userRoutes from "./routes/userRoute.js";
 import cors from 'cors';
 import codeComponentRoutes from './routes/codeComponentRoute.js'
+import webTemplateRoute from './routes/webTemplateRoute.js'
 
 dotenv.config();
 
@@ -23,7 +24,12 @@ app.use(express.json());
 
 // Define routes
 app.use('/api/users', userRoutes);
+
+// Code-Comp routes
 app.use('/api/code-components', codeComponentRoutes);
+
+// Template routes
+app.use('/api/code-templates', webTemplateRoute);
 
 // Start the Express server
 app.listen(PORT, () => {
