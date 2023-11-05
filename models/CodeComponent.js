@@ -11,6 +11,10 @@ const codeComponentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    category: {
+        type: String,
+        required: true,
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Reference the User model

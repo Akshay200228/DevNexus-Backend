@@ -10,11 +10,11 @@ export const createCodeComponent = async (req, res) => {
             return res.status(401).json({ error: 'Unauthorized' });
         }
         // Extract data from the request body
-        const { title, description, code } = req.body;
+        const { title, description, category, code } = req.body;
         // Get the user ID of the creator from the request
         const createdBy = req.userId;
         // Create a new CodeComponent instance
-        const newCodeComponent = new CodeComponent({ title, description, code, createdBy });
+        const newCodeComponent = new CodeComponent({ title, description, code, category, createdBy });
         // Save the new code component to the database
         await newCodeComponent.save();
         // Return a success response with the created code component
