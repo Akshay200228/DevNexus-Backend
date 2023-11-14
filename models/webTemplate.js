@@ -34,7 +34,7 @@ const webTemplateSchema = new mongoose.Schema({
         type: String, // Assuming the image is stored as a URL
         required: true,
     },
-})
+}, { timestamps: true });
 
 
 const WebTemplate = mongoose.model('WebTemplate', webTemplateSchema);

@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema({
       ref: 'CodeComponent', // Reference to CodeComponent model
     },
   ],
-});
+}, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);
 
