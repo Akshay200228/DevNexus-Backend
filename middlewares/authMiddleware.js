@@ -1,11 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 export const authenticate = (req, res, next) => {
-    console.log('Authenticating request...');
-
     const token = req.headers.authorization?.split(' ')[1];
-
-    console.log('Token:', token);
 
     if (!token) {
         console.log('No token provided');
@@ -14,14 +10,9 @@ export const authenticate = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        console.log('Token decoded:', decoded);
-
         // Pass the user's ID to the request object
         req.userId = decoded.userId;
-
         next();
-
         console.log('Successful');
     } catch (err) {
         console.log('Error decoding token:', err);
