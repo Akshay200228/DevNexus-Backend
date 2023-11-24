@@ -2,32 +2,62 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import multer from 'multer';
+
+// Set up multer storage for image uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).single('avatar');
 
 // SignUp User
 export const createUser = async (req, res) => {
   try {
-    const { name, email, username, password, avatar } = req.body;
-
-    // Check if the email or username already exists
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email or username already exists' });
-    }
-
-    const newUser = new User({ name, email, username, avatar });
-    newUser.password = await bcrypt.hash(password, 10);
-    await newUser.save();
-    res.status(201).json({
-      message: 'User registered successfully',
-      user: {
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        username: newUser.username,
-        avatar: newUser.avatar,
-        // Add other user data fields as needed
+    upload(req, res, async (err) => {
+      if (err instanceof multer.MulterError) {
+        return res.status(400).json({ error: 'Error uploading avatar image' });
+      } else if (err) {
+        return res.status(500).json({ error: 'Server Error' });
       }
+
+      const { name, email, username, password, avatar } = req.body;
+
+      // Check if the email or username already exists
+      const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+
+      if (existingUser) {
+        return res.status(400).json({ error: 'Email or username already exists' });
+      }
+
+      const newUser = new User({ name, email, username });
+
+      if (avatar) {
+        if (avatar.startsWith('https://') || avatar.startsWith('http://')) {
+          // Image URL provided, fetch the image and convert to Buffer
+          try {
+            const response = await axios.get(avatar, { responseType: 'arraybuffer' });
+            newUser.avatar = Buffer.from(response.data, 'binary');
+          } catch (urlFetchError) {
+            return res.status(400).json({ error: 'Invalid image URL' });
+          }
+        } else {
+          // Image file uploaded
+          newUser.avatar = req.file.buffer;
+        }
+      }
+
+      newUser.password = await bcrypt.hash(password, 10);
+      await newUser.save();
+
+      res.status(201).json({
+        message: 'User registered successfully',
+        user: {
+          _id: newUser._id,
+          name: newUser.name,
+          email: newUser.email,
+          username: newUser.username,
+          avatar: newUser.avatar ? newUser.avatar.toString('base64') : null,
+          // Add other user data fields as needed
+        },
+      });
     });
   } catch (error) {
     res.status(500).json({ error: 'Server Error' });

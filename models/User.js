@@ -37,16 +37,7 @@ const userSchema = new mongoose.Schema({
   },
 
   avatar: {
-    type: String,
-    validate: {
-      validator: function (value) {
-        // For example, you can check if value is a valid URL or if it's an image file path
-        return (
-          value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:image/')
-        );
-      },
-      message: 'Invalid avatar URL or image path',
-    },
+    type: Buffer,
   },
 
   // Add any other user-specific fields here
