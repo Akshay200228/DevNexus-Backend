@@ -2,11 +2,6 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import multer from 'multer';
-
-// Set up multer storage for image uploads
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).single('avatar');
 
 // SignUp User
 export const createUser = async (req, res) => {
@@ -19,12 +14,12 @@ export const createUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ error: 'Email or username already exists' });
     }
-    
+
     const newUser = new User({ name, email, username });
 
     if (avatar) {
       if (avatar.startsWith('https://') || avatar.startsWith('http://')) {
-        // Image URL provided, fetch the image and save the URL to the avatar field
+        // Image URL provided, save the URL to the avatar field
         newUser.avatar = avatar;
       } else {
         return res.status(400).json({ error: 'Invalid image URL' });
@@ -41,7 +36,7 @@ export const createUser = async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         username: newUser.username,
-        avatar: newUser.avatar || null, 
+        avatar: newUser.avatar || null,
         // Add other user data fields as needed
       },
     });
@@ -49,7 +44,6 @@ export const createUser = async (req, res) => {
     res.status(500).json({ error: 'Server Error' });
   }
 };
-
 
 // Login user
 export const loginUser = async (req, res) => {
