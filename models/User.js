@@ -37,14 +37,14 @@ const userSchema = new mongoose.Schema({
   },
 
   avatar: {
-    type: Buffer,
+    type: String,
   },
 
   // Add any other user-specific fields here
   codeComponents: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'CodeComponent', // Reference to CodeComponent model
+      ref: 'CodeComponent', 
     },
   ],
 }, { timestamps: true });

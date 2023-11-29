@@ -13,7 +13,7 @@ export const authenticate = (req, res, next) => {
         // Pass the user's ID to the request object
         req.userId = decoded.userId;
         next();
-        console.log('Successful');
+        console.log('Successful', decoded);
     } catch (err) {
         console.log('Error decoding token:', err);
         res.status(401).json({ message: 'Authentication failed' });
