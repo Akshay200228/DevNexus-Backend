@@ -2,10 +2,8 @@
 import express from 'express';
 import {
     createCodeComponent,
-    deleteCodeComponentById,
     getAllCodeComponents,
-    getCodeComponentById,
-    updateCodeComponentById,
+    getCodeComponentsByCategory,
 } from '../controllers/codeComponentController.js';
 
 import { authenticate } from "../middlewares/authMiddleware.js"
@@ -19,12 +17,7 @@ router.post('/', authenticate, createCodeComponent);
 router.get('/', getAllCodeComponents);
 
 // Get a code component by ID
-router.get('/:id', getCodeComponentById);
+router.get('/category/:category', getCodeComponentsByCategory);
 
-// Update a code component by ID
-router.put('/:id', authenticate, updateCodeComponentById);
-
-// Delete a code component by ID
-router.delete('/:id', authenticate, deleteCodeComponentById);
 
 export default router;
