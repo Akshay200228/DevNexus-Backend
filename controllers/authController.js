@@ -8,14 +8,14 @@ export const createUser = async (req, res) => {
   try {
     const { name, email, username, password, avatar } = req.body;
 
-    // Check if the email or username already exists
+    // Check if the email or username already existsD
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
 
     if (existingUser) {
       return res.status(400).json({ error: 'Email or username already exists' });
     }
 
-    const newUser = new User({ name, email, username });
+    const newUser = new User({ name, email, username, codeComponents: [], webTemplates: [] });
 
     if (avatar) {
       if (avatar.startsWith('https://') || avatar.startsWith('http://')) {
@@ -26,7 +26,10 @@ export const createUser = async (req, res) => {
       }
     }
 
+    // Hash the password
     newUser.password = await bcrypt.hash(password, 10);
+
+    // Save the user to get the _id
     await newUser.save();
 
     res.status(201).json({
@@ -37,13 +40,16 @@ export const createUser = async (req, res) => {
         email: newUser.email,
         username: newUser.username,
         avatar: newUser.avatar || null,
-        // Add other user data fields as needed
+        codeComponents: newUser.codeComponents,
+        webTemplates: newUser.webTemplates,
       },
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Server Error' });
   }
 };
+
 
 // Login user
 export const loginUser = async (req, res) => {

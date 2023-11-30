@@ -1,6 +1,7 @@
 // controllers/codeComponentController.js
 
 import CodeComponent from '../models/CodeComponent.js';
+import User from '../models/User.js';
 
 // Create a new code component
 export const createCodeComponent = async (req, res) => {
@@ -17,13 +18,17 @@ export const createCodeComponent = async (req, res) => {
         const newCodeComponent = new CodeComponent({ title, description, code, category, createdBy });
         // Save the new code component to the database
         await newCodeComponent.save();
+        // Update the user's codeComponents array with the new code component ID
+        await User.findByIdAndUpdate(createdBy, { $push: { codeComponents: newCodeComponent._id } });
         // Return a success response with the created code component
         res.status(201).json(newCodeComponent);
     } catch (error) {
         // Handle server error and return an error response
+        console.error(error);
         res.status(500).json({ error: 'Server Error' });
     }
 };
+
 
 
 // Get all code components

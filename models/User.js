@@ -40,13 +40,21 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
 
-  // Add any other user-specific fields here
+  // Add any user-specific fields here
   codeComponents: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'CodeComponent', 
     },
   ],
+  
+  webTemplates: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'WebTemplate',
+    },
+  ],
+
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);
