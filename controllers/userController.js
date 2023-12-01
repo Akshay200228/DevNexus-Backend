@@ -32,7 +32,6 @@ export const getSingleUser = async (req, res) => {
       email: user.email,
       username: user.username,
       avatar: user.avatar,
-      // Add other user data fields as needed
     });
   } catch (err) {
     console.error('Error while fetching user:', err);

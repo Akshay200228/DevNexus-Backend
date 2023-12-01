@@ -19,5 +19,4 @@ router.get('/', getAllCodeComponents);
 // Get a code component by ID
 router.get('/category/:category', getCodeComponentsByCategory);
 
-
 export default router;

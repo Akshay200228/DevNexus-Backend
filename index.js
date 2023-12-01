@@ -18,11 +18,12 @@ connectToMongoDB();
 // Enable CORS
 app.use(cors());
 
-// Define your routes and middleware here
+// ******************************** Define DevNexus routes and middleware here ******************************** //
+
 // Middleware to parse JSON requests
 app.use(express.json());
 
-// Define routes
+// users routes
 app.use('/api/users', userRoutes);
 
 // Code-Comp routes
