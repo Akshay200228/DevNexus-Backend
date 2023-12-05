@@ -2,32 +2,10 @@
 import User from '../models/User.js';
 import webTemplate from '../models/webTemplate.js'
 
-// Create a new web template
-// export const createWebTemplate = async (req, res) => {
-//     try {
-//         const { title, description, githubLink, deployLink, templateImage } = req.body;
-
-//         // Check if a web template with the same githubLink or deployLink already exists
-//         const existingWebTemplate = await webTemplate.findOne({ $or: [{ githubLink }, { deployLink }] });
-
-//         if (existingWebTemplate) {
-//             return res.status(400).json({ error: 'Web template with the same GitHub or deploy link already exists' });
-//         }
-
-//         const newWebTemplate = new webTemplate({ title, description, githubLink, deployLink, templateImage });
-
-//         await newWebTemplate.save();
-
-//         res.status(201).json(newWebTemplate);
-//     } catch (error) {
-//         res.status(500).json({ error: 'Server Error' });
-//     }
-// };
-
 export const createWebTemplate = async (req, res) => {
     try {
         const createdBy = req.userId;
-        
+
         // Check if the request is unauthorized
         if (!createdBy) {
             return res.status(401).json({ error: 'Unauthorized' });
@@ -56,7 +34,6 @@ export const createWebTemplate = async (req, res) => {
         res.status(500).json({ error: 'Server Error' });
     }
 };
-// webTemplate
 
 // Get all web templates
 export const getAllWebTemplates = async (req, res) => {
@@ -64,6 +41,48 @@ export const getAllWebTemplates = async (req, res) => {
         const webTemplates = await webTemplate.find();
         res.status(200).json(webTemplates);
     } catch (error) {
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+
+// Get a single web template by ID
+export const getSingleWebTemplate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const webTemplateData = await webTemplate.findById(id);
+
+        if (!webTemplateData) {
+            return res.status(404).json({ error: 'Web template not found' });
+        }
+
+        res.status(200).json(webTemplateData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+// Fetch detailed data for web templates by IDs
+export const getWebTemplatesByIds = async (req, res) => {
+    try {
+        const { webTemplateIds } = req.params;
+
+        // Split the comma-separated string of IDs into an array
+        const idsArray = webTemplateIds.split(',');
+
+        // Use the $in operator to find web templates with matching IDs
+        const webTemplates = await webTemplate.find({ _id: { $in: idsArray } });
+
+        // Check if any web templates are found
+        if (!webTemplates || webTemplates.length === 0) {
+            return res.status(404).json({ error: 'Web templates not found' });
+        }
+
+        // Return the found web templates as a JSON response
+        res.status(200).json(webTemplates);
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Server Error' });
     }
 };

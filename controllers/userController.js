@@ -15,8 +15,9 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
+// Get a single user by ID
 export const getSingleUser = async (req, res) => {
-  const userId = req.userId; // Use the user's ID from the request object
+  const userId = req.params.userId; // Use req.params to get the user ID from the URL
 
   try {
     const user = await User.findById(userId);
@@ -32,6 +33,8 @@ export const getSingleUser = async (req, res) => {
       email: user.email,
       username: user.username,
       avatar: user.avatar,
+      codeComponents: user.codeComponents,
+      webTemplates: user.webTemplates,
     });
   } catch (err) {
     console.error('Error while fetching user:', err);

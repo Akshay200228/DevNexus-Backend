@@ -53,3 +53,44 @@ export const getCodeComponentsByCategory = async (req, res) => {
 };
 
 
+// Get a single code component by ID
+export const getSingleCodeComponent = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const codeComponent = await CodeComponent.findById(id);
+
+        if (!codeComponent) {
+            return res.status(404).json({ error: 'Code component not found' });
+        }
+
+        res.status(200).json(codeComponent);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+
+export const getCodeComponentsByIds = async (req, res) => {
+    try {
+        const { codeComponentIds } = req.params;
+
+        // Split the comma-separated string of IDs into an array
+        const idsArray = codeComponentIds.split(',');
+
+        // Use the $in operator to find code components with matching IDs
+        const codeComponents = await CodeComponent.find({ _id: { $in: idsArray } });
+
+        // Check if any code components are found
+        if (!codeComponents || codeComponents.length === 0) {
+            return res.status(404).json({ error: 'Code components not found' });
+        }
+
+        // Return the found code components as a JSON response
+        res.status(200).json(codeComponents);
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
