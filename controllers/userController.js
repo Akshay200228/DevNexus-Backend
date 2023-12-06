@@ -15,8 +15,9 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
+// Get a single user by ID
 export const getSingleUser = async (req, res) => {
-  const userId = req.userId;
+  const userId = req.params.userId; // Use req.params to get the user ID from the URL
 
   try {
     const user = await User.findById(userId);
