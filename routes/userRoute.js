@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllUsers, getSingleUser } from '../controllers/userController.js';
+import { getAllUsers, getAuthenticatedUser, getSingleUser } from '../controllers/userController.js';
 import { loginUser, createUser } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 
@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', getAllUsers);
 
 //GET
-router.get("/authUser", authenticate, getSingleUser);
+router.get("/authUser", authenticate, getAuthenticatedUser);
 
 // Get a single user by ID
 router.get('/:userId', getSingleUser);
