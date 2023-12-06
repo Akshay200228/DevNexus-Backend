@@ -70,7 +70,7 @@ export const getSingleCodeComponent = async (req, res) => {
     }
 };
 
-
+// Fetch detailed data for Code Components by IDs
 export const getCodeComponentsByIds = async (req, res) => {
     try {
         const { codeComponentIds } = req.params;

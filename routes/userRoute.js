@@ -8,11 +8,11 @@ const router = express.Router();
 // Get all users (protected route)
 router.get('/', getAllUsers);
 
-// Get a single user by ID
-router.get('/:userId', getSingleUser);
-
 //GET
 router.get("/authUser", authenticate, getSingleUser);
+
+// Get a single user by ID
+router.get('/:userId', getSingleUser);
 
 // Create a new user
 router.post('/signup', createUser);
