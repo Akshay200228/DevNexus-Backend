@@ -12,14 +12,27 @@ export const createCodeComponent = async (req, res) => {
         }
         // Extract data from the request body
         const { title, description, category, code } = req.body;
-        // Get the user ID of the creator from the request
-        const createdBy = req.userId;
+        // Get the user ID and avatar of the creator from the request
+        const { userId, userAvatar } = req;
+
+        // Ensure userAvatar is not undefined
+        if (userAvatar === undefined) {
+            return res.status(500).json({ error: 'User avatar is undefined' });
+        }
+
         // Create a new CodeComponent instance
-        const newCodeComponent = new CodeComponent({ title, description, code, category, createdBy });
+        const newCodeComponent = new CodeComponent({
+            title,
+            description,
+            code,
+            category,
+            createdBy: userId, // Fix the variable name here
+            creatorAvatar: userAvatar
+        });
         // Save the new code component to the database
         await newCodeComponent.save();
         // Update the user's codeComponents array with the new code component ID
-        await User.findByIdAndUpdate(createdBy, { $push: { codeComponents: newCodeComponent._id } });
+        await User.findByIdAndUpdate(userId, { $push: { codeComponents: newCodeComponent._id } });
         // Return a success response with the created code component
         res.status(201).json(newCodeComponent);
     } catch (error) {
@@ -28,6 +41,7 @@ export const createCodeComponent = async (req, res) => {
         res.status(500).json({ error: 'Server Error' });
     }
 };
+
 
 
 
@@ -56,8 +70,8 @@ export const getCodeComponentsByCategory = async (req, res) => {
 // Get a single code component by ID
 export const getSingleCodeComponent = async (req, res) => {
     try {
-        const { id } = req.params;
-        const codeComponent = await CodeComponent.findById(id);
+        const { codeComponentId } = req.params;
+        const codeComponent = await CodeComponent.findById(codeComponentId);
 
         if (!codeComponent) {
             return res.status(404).json({ error: 'Code component not found' });

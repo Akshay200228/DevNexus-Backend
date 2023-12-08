@@ -19,6 +19,7 @@ const codeComponentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Reference the User model
     },
+    creatorAvatar: String,
 }, { timestamps: true });
 
 const CodeComponent = mongoose.model('CodeComponent', codeComponentSchema);
