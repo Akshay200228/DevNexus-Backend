@@ -108,3 +108,66 @@ export const getCodeComponentsByIds = async (req, res) => {
         res.status(500).json({ error: 'Server Error' });
     }
 };
+
+
+// Update a code component by ID
+export const updateCodeComponent = async (req, res) => {
+    try {
+        const { codeComponentId } = req.params;
+        const { title, description, code, category } = req.body;
+
+        const existingCodeComponent = await CodeComponent.findById(codeComponentId);
+
+        if (!existingCodeComponent) {
+            return res.status(404).json({ error: 'Code component not found' });
+        }
+
+        // Check if the authenticated user owns the code component
+        if (existingCodeComponent.createdBy.toString() !== req.userId) {
+            return res.status(403).json({ error: 'Unauthorized to update this code component' });
+        }
+
+        // Update the code component
+        existingCodeComponent.title = title;
+        existingCodeComponent.description = description;
+        existingCodeComponent.code = code;
+        existingCodeComponent.category = category;
+
+        // Save the updated code component
+        await existingCodeComponent.save();
+
+        res.status(200).json(existingCodeComponent);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+// Delete a code component by ID
+export const deleteCodeComponent = async (req, res) => {
+    try {
+        const { codeComponentId } = req.params;
+
+        const existingCodeComponent = await CodeComponent.findById(codeComponentId);
+
+        if (!existingCodeComponent) {
+            return res.status(404).json({ error: 'Code component not found' });
+        }
+
+        // Check if the authenticated user owns the code component
+        if (existingCodeComponent.createdBy.toString() !== req.userId) {
+            return res.status(403).json({ error: 'Unauthorized to delete this code component' });
+        }
+
+        // Remove the code component from the user's codeComponents array
+        await User.findByIdAndUpdate(req.userId, { $pull: { codeComponents: codeComponentId } });
+
+        // Delete the code component from the database
+        await CodeComponent.findByIdAndDelete(codeComponentId);
+
+        res.status(200).json({ message: 'Code component deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
