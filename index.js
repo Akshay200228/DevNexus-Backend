@@ -30,7 +30,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/code-components', codeComponentRoutes);
 
 // Template routes
-app.use('/api/code-templates', webTemplateRoute);
+app.use('/api/web-templates', webTemplateRoute);
 
 // Start the Express server
 app.listen(PORT, () => {

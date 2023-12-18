@@ -1,6 +1,6 @@
 // webTemplateController.js
 import User from '../models/User.js';
-import webTemplate from '../models/webTemplate.js'
+import webTemplate from '../models/webTemplate.js';
 
 export const createWebTemplate = async (req, res) => {
     try {
@@ -81,6 +81,69 @@ export const getWebTemplatesByIds = async (req, res) => {
 
         // Return the found web templates as a JSON response
         res.status(200).json(webTemplates);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+// Update a web template by ID
+export const updateWebTemplate = async (req, res) => {
+    try {
+        const { webTempId } = req.params;
+        const { title, description, githubLink, deployLink, templateImage } = req.body;
+
+        const existingWebTemplate = await webTemplate.findById(webTempId);
+
+        if (!existingWebTemplate) {
+            return res.status(404).json({ error: 'Web template not found' });
+        }
+
+        // Check if the authenticated user owns the web template
+        if (existingWebTemplate.createdBy.toString() !== req.userId) {
+            return res.status(403).json({ error: 'Unauthorized to update this web template' });
+        }
+
+        // Update the web template
+        existingWebTemplate.title = title;
+        existingWebTemplate.description = description;
+        existingWebTemplate.githubLink = githubLink;
+        existingWebTemplate.deployLink = deployLink;
+        existingWebTemplate.templateImage = templateImage;
+
+        // Save the updated web template
+        await existingWebTemplate.save();
+
+        res.status(200).json(existingWebTemplate);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+// Delete a web template by ID
+export const deleteWebTemplate = async (req, res) => {
+    try {
+        const { webTempId } = req.params;
+
+        const existingWebTemplate = await webTemplate.findById(webTempId);
+
+        if (!existingWebTemplate) {
+            return res.status(404).json({ error: 'Web template not found' });
+        }
+
+        // Check if the authenticated user owns the web template
+        if (existingWebTemplate.createdBy.toString() !== req.userId) {
+            return res.status(403).json({ error: 'Unauthorized to delete this web template' });
+        }
+
+        // Remove the web template from the user's webTemplates array
+        await User.findByIdAndUpdate(req.userId, { $pull: { webTemplates: webTempId } });
+
+        // Delete the web template from the database
+        await webTemplate.findByIdAndDelete(webTempId);
+
+        res.status(200).json({ message: 'Web template deleted successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server Error' });

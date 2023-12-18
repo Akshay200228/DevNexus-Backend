@@ -15,7 +15,6 @@ const webTemplateSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-
     deployLink: {
         type: String,
         required: true,

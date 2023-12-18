@@ -1,6 +1,6 @@
 // webTemplateRoute.js
 import express from 'express';
-import { createWebTemplate, getAllWebTemplates, getSingleWebTemplate, getWebTemplatesByIds } from '../controllers/webTemplateController.js';
+import { createWebTemplate, deleteWebTemplate, getAllWebTemplates, getSingleWebTemplate, getWebTemplatesByIds, updateWebTemplate } from '../controllers/webTemplateController.js';
 import {authenticate} from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
@@ -16,5 +16,11 @@ router.get('/:id', getSingleWebTemplate);
 
 // Fetch detailed data for web templates by IDs
 router.get('/details/:webTemplateIds', getWebTemplatesByIds);
+
+// Update a web template by ID
+router.put('/update/:webTempId', authenticate, updateWebTemplate);
+
+// Delete a web template by ID
+router.delete('/delete/:webTempId', authenticate, deleteWebTemplate);
 
 export default router;
