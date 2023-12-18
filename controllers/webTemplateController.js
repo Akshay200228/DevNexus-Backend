@@ -93,28 +93,30 @@ export const updateWebTemplate = async (req, res) => {
         const { webTempId } = req.params;
         const { title, description, githubLink, deployLink, templateImage } = req.body;
 
-        const existingWebTemplate = await webTemplate.findById(webTempId);
+        // Update the web template using findByIdAndUpdate
+        const updatedWebTemplate = await webTemplate.findByIdAndUpdate(
+            webTempId,
+            {
+                title,
+                description,
+                githubLink,
+                deployLink,
+                templateImage,
+            },
+            { new: true, runValidators: true }
+        );
 
-        if (!existingWebTemplate) {
+        // Check if the web template was not found
+        if (!updatedWebTemplate) {
             return res.status(404).json({ error: 'Web template not found' });
         }
 
         // Check if the authenticated user owns the web template
-        if (existingWebTemplate.createdBy.toString() !== req.userId) {
+        if (updatedWebTemplate.createdBy.toString() !== req.userId) {
             return res.status(403).json({ error: 'Unauthorized to update this web template' });
         }
 
-        // Update the web template
-        existingWebTemplate.title = title;
-        existingWebTemplate.description = description;
-        existingWebTemplate.githubLink = githubLink;
-        existingWebTemplate.deployLink = deployLink;
-        existingWebTemplate.templateImage = templateImage;
-
-        // Save the updated web template
-        await existingWebTemplate.save();
-
-        res.status(200).json(existingWebTemplate);
+        res.status(200).json(updatedWebTemplate);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server Error' });

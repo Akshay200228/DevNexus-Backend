@@ -119,32 +119,35 @@ export const updateCodeComponent = async (req, res) => {
         const { codeComponentId } = req.params;
         const { title, description, code, category } = req.body;
 
-        const existingCodeComponent = await CodeComponent.findById(codeComponentId);
+        // Update the code component using findByIdAndUpdate
+        const updatedCodeComponent = await CodeComponent.findByIdAndUpdate(
+            codeComponentId,
+            {
+                title,
+                description,
+                code,
+                category,
+            },
+            { new: true, runValidators: true }
+        );
 
-        if (!existingCodeComponent) {
+        // Check if the code component was not found
+        if (!updatedCodeComponent) {
             return res.status(404).json({ error: 'Code component not found' });
         }
 
         // Check if the authenticated user owns the code component
-        if (existingCodeComponent.createdBy.toString() !== req.userId) {
+        if (updatedCodeComponent.createdBy.toString() !== req.userId) {
             return res.status(403).json({ error: 'Unauthorized to update this code component' });
         }
 
-        // Update the code component
-        existingCodeComponent.title = title;
-        existingCodeComponent.description = description;
-        existingCodeComponent.code = code;
-        existingCodeComponent.category = category;
-
-        // Save the updated code component
-        await existingCodeComponent.save();
-
-        res.status(200).json(existingCodeComponent);
+        res.status(200).json(updatedCodeComponent);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server Error' });
     }
 };
+
 
 // Delete a code component by ID
 export const deleteCodeComponent = async (req, res) => {
