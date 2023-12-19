@@ -42,15 +42,17 @@ export const createCodeComponent = async (req, res) => {
     }
 };
 
-
-// Get all code components with pagination
+// Get code components for a specific page with sorting
 export const getAllCodeComponents = async (req, res) => {
     try {
         const page = req.query.page || 1;
         const limit = 9; // Number of items per page
         const skip = (page - 1) * limit;
 
-        const codeComponents = await CodeComponent.find().skip(skip).limit(limit);
+        const codeComponents = await CodeComponent.find()
+            .sort({ createdAt: -1 }) // Sorting in descending order based on createdAt
+            .skip(skip)
+            .limit(limit);
         res.status(200).json(codeComponents);
     } catch (error) {
         res.status(500).json({ error: 'Server Error' });
