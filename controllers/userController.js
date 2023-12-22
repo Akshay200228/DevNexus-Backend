@@ -68,3 +68,24 @@ export const getSingleUser = async (req, res) => {
     return res.status(500).json({ error: 'Server Error' });
   }
 };
+
+// Upload avatar image to Cloudinary
+export const uploadAvatar = async (req, res) => {
+  try {
+    console.log("Start")
+    // const result = await uploadFile(req.url);
+    console.log("image url", req.body)
+
+    // Update user's avatar field with the Cloudinary URL
+    const userId = req.userId;
+    const user = await User.findByIdAndUpdate(userId, { avatar: req.body.url}, { new: true });
+    console.log("upload user: ", user)
+
+    return res.status(200).json({
+      avatar: user.avatar,
+    });
+  } catch (error) {
+    console.error('Error uploading avatar:', error);
+    return res.status(500).json({ error: 'Server Error' });
+  }
+};
