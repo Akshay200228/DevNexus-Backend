@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllUsers, getAuthenticatedUser, getSingleUser, uploadAvatar } from '../controllers/userController.js';
+import { deleteAvatar, getAllUsers, getAuthenticatedUser, getSingleUser, uploadAvatar } from '../controllers/userController.js';
 import { loginUser, createUser } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import multer from 'multer';
@@ -25,5 +25,7 @@ const uploader = multer({
 });
 // Upload avatar route
 router.post('/upload-avatar', authenticate,  uploadAvatar);
+
+router.delete('/delete-avatar', authenticate,  deleteAvatar);
 
 export default router;
