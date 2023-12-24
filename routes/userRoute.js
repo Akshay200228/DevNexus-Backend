@@ -2,7 +2,6 @@ import express from 'express';
 import { deleteAvatar, getAllUsers, getAuthenticatedUser, getSingleUser, uploadAvatar } from '../controllers/userController.js';
 import { loginUser, createUser } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
-import multer from 'multer';
 
 const router = express.Router();
 
@@ -19,10 +18,6 @@ router.get('/:userId', getSingleUser);
 router.post('/signup', createUser);
 router.post('/login', loginUser);
 
-const uploader = multer({
-    storage: multer.memoryStorage({}),
-    limits: { fileSize: 1000000 }
-});
 // Upload avatar route
 router.post('/upload-avatar', authenticate,  uploadAvatar);
 

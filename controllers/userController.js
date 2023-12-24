@@ -2,12 +2,15 @@
 import CodeComponent from '../models/CodeComponent.js';
 import User from '../models/User.js';
 import cloudinary from 'cloudinary';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Configure Cloudinary with your credentials
 cloudinary.config({
-  cloud_name: 'dwiwwev8p',
-  api_key: '263782443627493',
-  api_secret: 'CvX_zWacHQUziDSDlBUKEPBVOSY',
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 
 // Get all users
