@@ -1,4 +1,5 @@
 // controllers/userController.js
+import CodeComponent from '../models/CodeComponent.js';
 import User from '../models/User.js';
 import cloudinary from 'cloudinary';
 
@@ -82,7 +83,16 @@ export const uploadAvatar = async (req, res) => {
   try {
     // Update user's avatar field with the Cloudinary URL
     const userId = req.userId;
-    const user = await User.findByIdAndUpdate(userId, { avatar: req.body.url }, { new: true });
+    const newAvatarUrl = req.body.url;
+
+    // Find and update the user
+    const user = await User.findByIdAndUpdate(userId, { avatar: newAvatarUrl }, { new: true });
+
+    // Update the creatorAvatar field in CodeComponent documents where createdBy matches the current user
+    await CodeComponent.updateMany(
+      { createdBy: userId },
+      { $set: { creatorAvatar: newAvatarUrl } }
+    );
 
     return res.status(200).json({
       avatar: user.avatar,

@@ -25,6 +25,8 @@ export const authenticate = async (req, res, next) => {
         req.userId = decoded.userId;
         req.userAvatar = user.avatar;
 
+        console.log("Current avatar: ", req.userAvatar)
+
         next();
         // console.log('Authentication successful', decoded);
     } catch (err) {
