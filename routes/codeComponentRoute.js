@@ -24,7 +24,7 @@ router.get('/:codeComponentId', getSingleCodeComponent);
 router.get('/', getAllCodeComponents);
 
 // Get code components by category
-router.get('/:category', getCodeComponentsByCategory);
+router.get('/category/:category', getCodeComponentsByCategory);
 
 // Fetch multiple code components by IDs (Note the change in the route parameter definition)
 router.get('/ids/:codeComponentIds*', getCodeComponentsByIds);

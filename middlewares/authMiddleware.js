@@ -23,7 +23,7 @@ export const authenticate = async (req, res, next) => {
 
         // Attach user details to the request object
         req.userId = decoded.userId;
-        req.userAvatar = user.avatar;
+        // req.userAvatar = user.avatar;
 
         next();
         // console.log('Authentication successful', decoded);

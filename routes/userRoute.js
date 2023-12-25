@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteAvatar, getAllUsers, getAuthenticatedUser, getSingleUser, uploadAvatar } from '../controllers/userController.js';
+import { deleteAvatar, getAllUsers, getAuthenticatedUser, getSingleUser, updateAuthenticatedUser, uploadAvatar } from '../controllers/userController.js';
 import { loginUser, createUser } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 
@@ -19,8 +19,11 @@ router.post('/signup', createUser);
 router.post('/login', loginUser);
 
 // Upload avatar route
-router.post('/upload-avatar', authenticate,  uploadAvatar);
+router.post('/upload-avatar', authenticate, uploadAvatar);
 
-router.delete('/delete-avatar', authenticate,  deleteAvatar);
+router.delete('/delete-avatar', authenticate, deleteAvatar);
+
+// Update authenticated user details
+router.put('/update', authenticate, updateAuthenticatedUser);
 
 export default router;

@@ -13,11 +13,18 @@ export const createCodeComponent = async (req, res) => {
         // Extract data from the request body
         const { title, description, category, code } = req.body;
         // Get the user ID and avatar of the creator from the request
-        const { userId, userAvatar } = req;
+        const { userId } = req;
 
         // Ensure userAvatar is not undefined
-        if (userAvatar === undefined) {
-            return res.status(500).json({ error: 'User avatar is undefined' });
+        // if (userAvatar === undefined) {
+        //     return res.status(500).json({ error: 'User avatar is undefined' });
+        // }
+
+        // Use populate to get the user details, including avatar
+        const user = await User.findById(userId).select('avatar').exec();
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
         }
 
         // Create a new CodeComponent instance
@@ -27,7 +34,8 @@ export const createCodeComponent = async (req, res) => {
             code,
             category,
             createdBy: userId,
-            creatorAvatar: userAvatar,
+            // creatorAvatar: userAvatar,
+            creatorAvatar: user.avatar,
         });
         // Save the new code component to the database
         await newCodeComponent.save();
@@ -64,6 +72,7 @@ export const getAllCodeComponents = async (req, res) => {
 export const getCodeComponentsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
+        console.log(category)
         const codeComponents = await CodeComponent.find({ category });
         res.status(200).json(codeComponents);
     } catch (error) {

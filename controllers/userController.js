@@ -153,3 +153,33 @@ const getPublicIdFromUrl = (url) => {
   const publicId = filename.split('.')[0];
   return publicId;
 };
+
+
+// Update authenticated user details
+export const updateAuthenticatedUser = async (req, res) => {
+  const userId = req.userId;
+  const { username, name } = req.body; // Extract new username and name from request body
+
+  try {
+    // Find and update the user
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { username, name },
+      { new: true }
+    );
+
+    // Send the updated user data in the response
+    return res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      avatar: user.avatar,
+      codeComponents: user.codeComponents,
+      webTemplates: user.webTemplates,
+    });
+  } catch (err) {
+    console.error('Error while updating user:', err);
+    return res.status(500).json({ error: 'Server Error' });
+  }
+};
