@@ -102,6 +102,10 @@ export const getCodeComponentsByIds = async (req, res) => {
     try {
         const { codeComponentIds } = req.params;
 
+        if (!codeComponentIds) {
+            return res.status(400).json({ error: 'Code component IDs are missing' });
+        }
+
         // Split the comma-separated string of IDs into an array
         const idsArray = codeComponentIds.split(',');
 

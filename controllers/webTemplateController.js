@@ -68,6 +68,10 @@ export const getWebTemplatesByIds = async (req, res) => {
     try {
         const { webTemplateIds } = req.params;
 
+        if (!webTemplateIds) {
+            return res.status(400).json({ error: 'Web template IDs are missing' });
+        }
+
         // Split the comma-separated string of IDs into an array
         const idsArray = webTemplateIds.split(',');
 
