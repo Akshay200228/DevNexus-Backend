@@ -72,7 +72,6 @@ export const getAllCodeComponents = async (req, res) => {
 export const getCodeComponentsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
-        console.log(category)
         const codeComponents = await CodeComponent.find({ category });
         res.status(200).json(codeComponents);
     } catch (error) {

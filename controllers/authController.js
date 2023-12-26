@@ -4,62 +4,20 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-// SignUp User
-// export const createUser = async (req, res) => {
-//   try {
-//     const { name, email, username, password, avatar } = req.body;
-
-//     // Check if the email or username already existsD
-//     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-
-//     if (existingUser) {
-//       return res.status(400).json({ error: 'Email or username already exists' });
-//     }
-
-//     const newUser = new User({ name, email, username, codeComponents: [], webTemplates: [] });
-
-//     if (avatar) {
-//       if (avatar.startsWith('https://') || avatar.startsWith('http://')) {
-//         // Image URL provided, save the URL to the avatar field
-//         newUser.avatar = avatar;
-//       } else {
-//         return res.status(400).json({ error: 'Invalid image URL' });
-//       }
-//     }
-
-//     // Hash the password
-//     newUser.password = await bcrypt.hash(password, 10);
-
-//     // Save the user to get the _id
-//     await newUser.save();
-
-//     res.status(201).json({
-//       message: 'User registered successfully',
-//       user: {
-//         _id: newUser._id,
-//         name: newUser.name,
-//         email: newUser.email,
-//         username: newUser.username,
-//         avatar: newUser.avatar || null,
-//         codeComponents: newUser.codeComponents,
-//         webTemplates: newUser.webTemplates,
-//       },
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Server Error' });
-//   }
-// };
-
 export const createUser = async (req, res) => {
   try {
-    const { name, email, username, password } = req.body;
+    const { name, email, username, password, confirmPassword } = req.body;
 
     // Check if the email or username already exists
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
 
     if (existingUser) {
       return res.status(400).json({ error: 'Email or username already exists' });
+    }
+
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: 'Password and confirm password do not match' });
     }
 
     const newUser = new User({ name, email, username, codeComponents: [], webTemplates: [] });
