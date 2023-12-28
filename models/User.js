@@ -21,6 +21,19 @@ const userSchema = new mongoose.Schema({
     },
   },
 
+  otp: {
+    type: String, // Change the type if necessary (e.g., Number)
+  },
+  
+  otpExpiration: {
+    type: Date,
+  },
+  
+  verified: {
+    type: Boolean,
+    default: false, // Set to false by default, indicating the user is not verified
+  },
+
   username: {
     type: String,
     required: [true, 'Username is required!'],
@@ -44,10 +57,10 @@ const userSchema = new mongoose.Schema({
   codeComponents: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'CodeComponent', 
+      ref: 'CodeComponent',
     },
   ],
-  
+
   webTemplates: [
     {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,6 +1,6 @@
 import express from 'express';
 import { deleteAvatar, getAllUsers, getAuthenticatedUser, getSingleUser, updateAuthenticatedUser, uploadAvatar } from '../controllers/userController.js';
-import { loginUser, createUser } from '../controllers/authController.js';
+import { loginUser, createUser, resendOTP, verifyOTP } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -25,5 +25,11 @@ router.delete('/delete-avatar', authenticate, deleteAvatar);
 
 // Update authenticated user details
 router.put('/update', authenticate, updateAuthenticatedUser);
+
+// Resend OTP route
+router.post('/resend-otp', resendOTP);
+
+router.post('/verify-otp', verifyOTP);
+
 
 export default router;
