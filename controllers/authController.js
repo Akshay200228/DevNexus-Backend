@@ -7,6 +7,8 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 dotenv.config();
+const jwtTokenUser = process.env.JWT_SECRET;
+console.log("jwtTokenUser: ", jwtTokenUser)
 
 // Function to generate a random OTP with expiration time (10 minutes)
 const generateOTP = () => {
@@ -103,6 +105,7 @@ export const verifyOTP = async (req, res) => {
   }
 };
 
+// Signup
 export const createUser = async (req, res) => {
   try {
     const { name, email, username, password, confirmPassword } = req.body;
@@ -134,14 +137,27 @@ export const createUser = async (req, res) => {
     newUser.otp = otp;
     newUser.otpExpiration = expirationTime;
 
+    // Generate a token for the new user
+    const token = jwt.sign(
+      {
+        userId: newUser._id
+      },
+      jwtTokenUser,
+      {
+        expiresIn: '7d', // Token expiration time
+      }
+    );
+    console.log("User token here: ", token)
     // Save the user to get the _id
     await newUser.save();
 
     // Send OTP via email
     sendOTPEmail(newUser.email, otp);
 
+    // Include the token in the response
     res.status(201).json({
       message: 'User registered successfully',
+      token,
       user: {
         _id: newUser._id,
         name: newUser.name,
@@ -161,7 +177,7 @@ export const createUser = async (req, res) => {
 // Login user
 export const loginUser = async (req, res) => {
   try {
-    const { usernameOrEmail, password, otp } = req.body;
+    const { usernameOrEmail, password } = req.body;
     const user = await User.findOne({
       $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
     });
@@ -181,7 +197,7 @@ export const loginUser = async (req, res) => {
       {
         userId: user._id
       },
-      process.env.JWT_SECRET,
+      jwtTokenUser,
       {
         expiresIn: '7d', // Token expiration time
       }
