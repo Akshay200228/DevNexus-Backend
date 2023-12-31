@@ -67,6 +67,13 @@ const userSchema = new mongoose.Schema({
       ref: 'WebTemplate',
     },
   ],
+  
+  bookmarks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CodeComponent',
+    },
+  ],
 
 }, { timestamps: true });
 

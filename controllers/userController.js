@@ -27,18 +27,22 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// Get the authenticated user's details
+// Get the authenticated user's details with bookmarks
 export const getAuthenticatedUser = async (req, res) => {
-  const userId = req.userId; // Use req.userId to get the authenticated user's ID
+  const userId = req.userId;
 
   try {
-    const user = await User.findById(userId);
+    // Use populate to get bookmarks details for the authenticated user
+    const user = await User.findById(userId).populate({
+      path: 'bookmarks',
+      model: 'CodeComponent',
+    });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Send the user data in the response
+    // Send the user data with bookmarks in the response
     return res.status(200).json({
       _id: user._id,
       name: user.name,
@@ -47,6 +51,10 @@ export const getAuthenticatedUser = async (req, res) => {
       avatar: user.avatar,
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
+      // bookmarks: user.bookmarks,
+      bookmarks: user.bookmarks.map((bookmark) => ({
+        _id: bookmark._id,
+      })),
     });
   } catch (err) {
     console.error('Error while fetching user:', err);
@@ -80,6 +88,33 @@ export const getSingleUser = async (req, res) => {
     return res.status(500).json({ error: 'Server Error' });
   }
 };
+
+export const getSingleUserByUsername = async (req, res) => {
+  const username = req.params.username;
+
+  try {
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Send the user data in the response
+    return res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      avatar: user.avatar,
+      codeComponents: user.codeComponents,
+      webTemplates: user.webTemplates,
+    });
+  } catch (err) {
+    console.error('Error while fetching user:', err);
+    return res.status(500).json({ error: 'Server Error' });
+  }
+};
+
 
 // Upload avatar image to Cloudinary
 export const uploadAvatar = async (req, res) => {

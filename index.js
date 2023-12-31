@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoute.js";
 import cors from 'cors';
 import codeComponentRoutes from './routes/codeComponentRoute.js'
 import webTemplateRoute from './routes/webTemplateRoute.js'
+import bookMarkRoute from './routes/bookMarkRoute.js'
 
 dotenv.config();
 
@@ -28,6 +29,9 @@ app.use('/api/users', userRoutes);
 
 // Code-Comp routes
 app.use('/api/code-components', codeComponentRoutes);
+
+// Bookmark Code-Comp routes
+app.use('/api/bookmark', bookMarkRoute);
 
 // Template routes
 app.use('/api/web-templates', webTemplateRoute);

@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteAvatar, getAllUsers, getAuthenticatedUser, getSingleUser, updateAuthenticatedUser, uploadAvatar } from '../controllers/userController.js';
+import { deleteAvatar, getAllUsers, getAuthenticatedUser, getSingleUser, getSingleUserByUsername, updateAuthenticatedUser, uploadAvatar } from '../controllers/userController.js';
 import { loginUser, createUser, resendOTP, verifyOTP } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 
@@ -13,6 +13,7 @@ router.get("/authUser", authenticate, getAuthenticatedUser);
 
 // Get a single user by ID
 router.get('/:userId', getSingleUser);
+router.get('/:username', getSingleUserByUsername);
 
 // Create a new user
 router.post('/signup', createUser);
