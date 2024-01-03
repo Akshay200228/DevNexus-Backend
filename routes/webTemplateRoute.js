@@ -1,6 +1,6 @@
 // webTemplateRoute.js
 import express from 'express';
-import { createWebTemplate, deleteWebTemplate, getAllWebTemplates, getSingleWebTemplate, getWebTemplatesByIds, updateWebTemplate } from '../controllers/webTemplateController.js';
+import { createWebTemplate, deleteWebTemplate, getAllWebTemplates, getPaginatedWebTemplates, getSingleWebTemplate, getWebTemplatesByIds, updateWebTemplate } from '../controllers/webTemplateController.js';
 import {authenticate} from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
@@ -10,6 +10,9 @@ router.post('/', authenticate, createWebTemplate);
 
 // Get all web templates
 router.get('/', getAllWebTemplates);
+
+router.get('/paginated-web-templates', getPaginatedWebTemplates);
+
 
 // Get a single web template by ID
 router.get('/:id', getSingleWebTemplate);

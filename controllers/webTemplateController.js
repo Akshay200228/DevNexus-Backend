@@ -45,6 +45,31 @@ export const getAllWebTemplates = async (req, res) => {
     }
 };
 
+// Get paginated web templates
+export const getPaginatedWebTemplates = async (req, res) => {
+    try {
+        const { page = 1, perPage = 12 } = req.query;
+
+        // Convert page and perPage to integers
+        const currentPage = parseInt(page, 10);
+        const itemsPerPage = parseInt(perPage, 10);
+
+        // Calculate the number of documents to skip based on the current page
+        const skip = (currentPage - 1) * itemsPerPage;
+
+        // Fetch paginated web templates using Mongoose's skip and limit
+        const webTemplates = await webTemplate.find().skip(skip).limit(itemsPerPage);
+
+        // Calculate the total number of web templates
+        const totalCount = await webTemplate.countDocuments();
+
+        // Return the paginated results as an array
+        res.status(200).json(webTemplates);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
 
 // Get a single web template by ID
 export const getSingleWebTemplate = async (req, res) => {
