@@ -8,7 +8,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const jwtTokenUser = process.env.JWT_SECRET;
-console.log("jwtTokenUser: ", jwtTokenUser)
 
 // Function to generate a random OTP with expiration time (10 minutes)
 const generateOTP = () => {

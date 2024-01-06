@@ -56,17 +56,27 @@ export const getAllCodeComponents = async (req, res) => {
         const page = req.query.page || 1;
         const limit = 9; // Number of items per page
         const skip = (page - 1) * limit;
+        const titleQuery = req.query.title || '';
 
-        const codeComponents = await CodeComponent.find()
+        // Use a regular expression to make the title search case-insensitive
+        const titleRegex = new RegExp(titleQuery, 'i');
+
+        // Define the search criteria based on whether a title is provided
+        const searchCriteria = titleQuery
+            ? { title: { $regex: titleRegex } }
+            : {};
+
+        const codeComponents = await CodeComponent.find(searchCriteria)
             .sort({ createdAt: -1 }) // Sorting in descending order based on createdAt
             .skip(skip)
             .limit(limit);
+
         res.status(200).json(codeComponents);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Server Error' });
     }
 };
-
 
 // Get code components by category
 export const getCodeComponentsByCategory = async (req, res) => {
