@@ -8,8 +8,6 @@ export const bookmarkCodeComponent = async (req, res) => {
     const codeComponentId = req.params.codeComponentId;
 
     try {
-        console.log('Received codeComponentId:', codeComponentId);
-
         // Check if the code component exists
         const codeComponent = await CodeComponent.findById(codeComponentId);
         if (!codeComponent) {
@@ -19,7 +17,6 @@ export const bookmarkCodeComponent = async (req, res) => {
 
         // Check if the user has already bookmarked the code component
         const user = await User.findById(userId);
-        console.log('User bookmarks:', user.bookmarks); // Log the user's bookmarks
         const isBookmarked = user.bookmarks.includes(codeComponentId);
         if (isBookmarked) {
             console.log('Code component already bookmarked');
@@ -29,8 +26,6 @@ export const bookmarkCodeComponent = async (req, res) => {
         // Add the code component to the user's bookmarks
         user.bookmarks.push(codeComponentId);
         await user.save();
-
-        console.log('Code component bookmarked successfully');
         res.status(200).json({ message: 'Code component bookmarked successfully' });
     } catch (error) {
         console.error('Error bookmarking code component:', error);
@@ -62,9 +57,6 @@ export const getAllUsersWithBookmarks = async (req, res) => {
             webTemplates: user.webTemplates,
             bookmarks: user.bookmarks.map((bookmark) => ({
                 _id: bookmark._id,
-                title: bookmark.title,
-                description: bookmark.description,
-                // ... (other fields)
             })),
         }));
 

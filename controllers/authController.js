@@ -13,7 +13,7 @@ const jwtTokenUser = process.env.JWT_SECRET;
 const generateOTP = () => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const expirationTime = new Date();
-  expirationTime.setMinutes(expirationTime.getMinutes() + 10); // Set expiration time to 10 minutes from now
+  expirationTime.setMinutes(expirationTime.getMinutes() + 1); // Set expiration time to 10 minutes from now
   return { otp, expirationTime };
 };
 
@@ -53,6 +53,7 @@ const sendOTPEmail = async (to, otp) => {
     console.error('Error sending OTP email:', error);
   }
 };
+
 
 export const resendOTP = async (req, res) => {
   try {
@@ -97,7 +98,22 @@ export const verifyOTP = async (req, res) => {
     user.otpExpiration = undefined;
     await user.save();
 
-    res.status(200).json({ message: 'OTP verified successfully' });
+    // Generate and send an authentication token (e.g., JWT) to the client
+    const token = jwt.sign(
+      {
+        userId: user._id
+      },
+      jwtTokenUser,
+      {
+        expiresIn: '7d', // Token expiration time
+      }
+    );
+
+    res.status(200).json({
+      message: 'OTP verified successfully',
+      token,
+      user,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
@@ -136,27 +152,14 @@ export const createUser = async (req, res) => {
     newUser.otp = otp;
     newUser.otpExpiration = expirationTime;
 
-    // Generate a token for the new user
-    const token = jwt.sign(
-      {
-        userId: newUser._id
-      },
-      jwtTokenUser,
-      {
-        expiresIn: '7d', // Token expiration time
-      }
-    );
-    console.log("User token here: ", token)
     // Save the user to get the _id
     await newUser.save();
 
     // Send OTP via email
     sendOTPEmail(newUser.email, otp);
 
-    // Include the token in the response
     res.status(201).json({
       message: 'User registered successfully',
-      token,
       user: {
         _id: newUser._id,
         name: newUser.name,
@@ -190,6 +193,11 @@ export const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+
+    // Check if the user is verified
+    // if (!user.verified) {
+    //   return res.status(401).json({ error: 'User not verified' });
+    // }
 
     // Generate and send an authentication token (e.g., JWT) to the client
     const token = jwt.sign(
