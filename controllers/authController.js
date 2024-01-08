@@ -13,7 +13,7 @@ const jwtTokenUser = process.env.JWT_SECRET;
 const generateOTP = () => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const expirationTime = new Date();
-  expirationTime.setMinutes(expirationTime.getMinutes() + 1); // Set expiration time to 10 minutes from now
+  expirationTime.setMinutes(expirationTime.getMinutes() + 10); // Set expiration time to 10 minutes from now
   return { otp, expirationTime };
 };
 
@@ -70,7 +70,6 @@ export const resendOTP = async (req, res) => {
 
     // Send OTP via email
     sendOTPEmail(user.email, otp);
-
     // Update user document in the database with the new OTP
     await user.save();
 

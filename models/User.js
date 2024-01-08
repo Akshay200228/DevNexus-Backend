@@ -22,13 +22,13 @@ const userSchema = new mongoose.Schema({
   },
 
   otp: {
-    type: String, // Change the type if necessary (e.g., Number)
+    type: String,
   },
-  
+
   otpExpiration: {
     type: Date,
   },
-  
+
   verified: {
     type: Boolean,
     default: false, // Set to false by default, indicating the user is not verified
@@ -46,7 +46,10 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is required!'],
-    minlength: 6,
+    match: [
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-])(?=.*\d).{8,}$/,
+      'Password should be at least 8 characters long and include at least 1 uppercase letter, 1 lowercase letter, 1 special character, and 1 digit.',
+    ],
   },
 
   avatar: {
@@ -67,7 +70,7 @@ const userSchema = new mongoose.Schema({
       ref: 'WebTemplate',
     },
   ],
-  
+
   bookmarks: [
     {
       type: mongoose.Schema.Types.ObjectId,
