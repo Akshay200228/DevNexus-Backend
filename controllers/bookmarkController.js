@@ -26,6 +26,11 @@ export const bookmarkCodeComponent = async (req, res) => {
         // Add the code component to the user's bookmarks
         user.bookmarks.push(codeComponentId);
         await user.save();
+
+        // Add the user ID to the code component's bookmarks array
+        codeComponent.bookmarks.push(userId);
+        await codeComponent.save();
+
         res.status(200).json({ message: 'Code component bookmarked successfully' });
     } catch (error) {
         console.error('Error bookmarking code component:', error);
@@ -74,6 +79,9 @@ export const removeBookmark = async (req, res) => {
 
         // Remove the code component from the user's bookmarks
         await User.findByIdAndUpdate(userId, { $pull: { bookmarks: codeComponentId } });
+
+        // Remove the user ID from the code component's bookmarks array
+        await CodeComponent.findByIdAndUpdate(codeComponentId, { $pull: { bookmarks: userId } });
 
         res.status(200).json({ message: 'Code component removed from bookmarks' });
     } catch (error) {

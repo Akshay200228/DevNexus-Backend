@@ -20,6 +20,12 @@ const codeComponentSchema = new mongoose.Schema({
         ref: 'User', // Reference the User model
     },
     creatorAvatar: String,
+    bookmarks: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        },
+    ],
 }, { timestamps: true });
 
 const CodeComponent = mongoose.model('CodeComponent', codeComponentSchema);
