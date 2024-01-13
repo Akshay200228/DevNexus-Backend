@@ -14,6 +14,6 @@ router.post('/add-bookmark/:codeComponentId', authenticate, bookmarkCodeComponen
 router.delete('/remove-bookmark', authenticate, removeBookmark);
 
 // Get bookmark route
-router.delete('/get-bookmark', authenticate, getAllUsersWithBookmarks);
+router.get('/get-bookmark', authenticate, getAllUsersWithBookmarks);
 
 export default router;

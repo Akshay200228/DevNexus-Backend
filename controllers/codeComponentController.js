@@ -119,8 +119,8 @@ export const getCodeComponentsByIds = async (req, res) => {
         // Split the comma-separated string of IDs into an array
         const idsArray = codeComponentIds.split(',');
 
-        // Use the $in operator to find code components with matching IDs
-        const codeComponents = await CodeComponent.find({ _id: { $in: idsArray } });
+        // Use the $in operator to find code components with matching IDs and sort in descending order
+        const codeComponents = await CodeComponent.find({ _id: { $in: idsArray } }).sort({ _id: -1 });
 
         // Check if any code components are found
         if (!codeComponents || codeComponents.length === 0) {
