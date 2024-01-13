@@ -82,7 +82,7 @@ export const getAllCodeComponents = async (req, res) => {
 export const getCodeComponentsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
-        const codeComponents = await CodeComponent.find({ category });
+        const codeComponents = await CodeComponent.find({ category }).sort({ _id: -1 });
         res.status(200).json(codeComponents);
     } catch (error) {
         res.status(500).json({ error: 'Server Error' });
