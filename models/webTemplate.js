@@ -20,7 +20,7 @@ const webTemplateSchema = new mongoose.Schema({
         required: true,
     },
     templateImage: {
-        type: String, // Assuming the image is stored as a URL
+        type: String,
         required: true,
     },
     createdBy: {

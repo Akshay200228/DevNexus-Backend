@@ -8,6 +8,7 @@ const router = express.Router();
 // Create a new web template
 router.post('/', authenticate, createWebTemplate);
 
+
 // Get all web templates
 router.get('/', getAllWebTemplates);
 

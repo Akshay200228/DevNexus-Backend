@@ -82,12 +82,29 @@ export const getAllCodeComponents = async (req, res) => {
 export const getCodeComponentsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
-        const codeComponents = await CodeComponent.find({ category }).sort({ _id: -1 });
+        const codeComponents = await CodeComponent.find({ category })
+        .sort({ _id: -1 });
         res.status(200).json(codeComponents);
     } catch (error) {
         res.status(500).json({ error: 'Server Error' });
     }
 };
+// Paginated code comp category
+// export const getCodeComponentsByCategory = async (req, res) => {
+//     try {
+//         const { category } = req.params;
+//         const page = req.query.page || 1;
+//         const limit = 12; // Number of items per page
+//         const skip = (page - 1) * limit;
+//         const codeComponents = await CodeComponent.find({ category })
+//             .sort({ _id: -1 })
+//             .skip(skip)
+//             .limit(limit);
+//         res.status(200).json(codeComponents);
+//     } catch (error) {
+//         res.status(500).json({ error: 'Server Error' });
+//     }
+// };
 
 
 // Get a single code component by ID

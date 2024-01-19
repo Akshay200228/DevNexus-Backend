@@ -1,6 +1,35 @@
 // webTemplateController.js
 import User from '../models/User.js';
 import webTemplate from '../models/webTemplate.js';
+// import cloudinary from 'cloudinary';
+// import dotenv from 'dotenv';
+
+// dotenv.config();
+
+// cloudinary.config({
+//     cloud_name: process.env.TEMP_CLOUD_NAME,
+//     api_key: process.env.TEMP_API_KEY,
+//     api_secret: process.env.TEMP_API_SECRET,
+// });
+
+// export const uploadTemplateImg = async (req, res) => {
+//     try {
+//         const userId = req.userId;
+//         const templateImage = req.body.tempImageUrl;
+//         await webTemplate.updateMany({
+//             templateImage: templateImage,
+//             createdBy: userId,
+//         });
+
+//         res.status(201).json({
+//             templateImage: templateImage.templateImage,
+//         });
+//     } catch (error) {
+//         console.error('Error uploading template image:', error);
+//         return res.status(500).json({ error: 'Server Error' });
+//     }
+// };
+
 
 export const createWebTemplate = async (req, res) => {
     try {
@@ -38,7 +67,7 @@ export const createWebTemplate = async (req, res) => {
 // Get all web templates
 export const getAllWebTemplates = async (req, res) => {
     try {
-        const webTemplates = await webTemplate.find();
+        const webTemplates = await webTemplate.find().sort({ createdAt: -1 });
         res.status(200).json(webTemplates);
     } catch (error) {
         res.status(500).json({ error: 'Server Error' });
@@ -58,7 +87,7 @@ export const getPaginatedWebTemplates = async (req, res) => {
         const skip = (currentPage - 1) * itemsPerPage;
 
         // Fetch paginated web templates using Mongoose's skip and limit
-        const webTemplates = await webTemplate.find().skip(skip).limit(itemsPerPage);
+        const webTemplates = await webTemplate.find().sort({ createdAt: -1 }).skip(skip).limit(itemsPerPage);
 
         // Calculate the total number of web templates
         const totalCount = await webTemplate.countDocuments();
