@@ -156,6 +156,7 @@ export const deleteAvatar = async (req, res) => {
 
     // Parse the avatar URL to get the public_id
     const publicId = getPublicIdFromUrl(previousImageUrl);
+    console.log("Public ID:", publicId);
 
     // Make an API call to Cloudinary to delete the image
     const deletionResult = await cloudinary.uploader.destroy(publicId);
@@ -167,6 +168,10 @@ export const deleteAvatar = async (req, res) => {
       // Remove the avatar URL from the user's data in the database
       await User.findByIdAndUpdate(userId, { $set: { avatar: null } });
       res.status(200).json({ message: 'Image deleted successfully.' });
+    } else if (deletionResult.result === 'not found') {
+      // Image not found in Cloudinary, but proceed to remove from the database
+      await User.findByIdAndUpdate(userId, { $set: { avatar: null } });
+      res.status(200).json({ message: 'Image not found in Cloudinary. Removed from the database.' });
     } else {
       // Image deletion failed
       console.error("Failed to delete image:", deletionResult);
