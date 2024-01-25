@@ -73,6 +73,9 @@ export const getSingleUser = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Count the number of followers
+    const followerCount = await User.countDocuments({ following: userId });
+
     // Send the user data in the response
     return res.status(200).json({
       _id: user._id,
@@ -83,6 +86,7 @@ export const getSingleUser = async (req, res) => {
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
       following: user.following,
+      followerCount: followerCount,
     });
   } catch (err) {
     console.error('Error while fetching user:', err);
@@ -237,9 +241,6 @@ export const followUser = async (req, res) => {
     if (user.following.includes(followUserId)) {
       return res.status(400).json({ error: 'User is already being followed' });
     }
-
-    // Update the followersCount for the user being followed
-    await User.findByIdAndUpdate(followUserId, { $inc: { followersCount: 1 } });
 
     // Add the follower to the user's following array
     await User.findByIdAndUpdate(userId, { $push: { following: followUserId } });

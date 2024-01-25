@@ -56,11 +56,6 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
 
-  followersCount: {
-    type: Number,
-    default: 0, // Default value is set to 0
-  },
-
   // Add any user-specific fields here
   codeComponents: [
     {
@@ -84,6 +79,14 @@ const userSchema = new mongoose.Schema({
   ],
 
   following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+
+  // New field to store the followers
+  followers: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
