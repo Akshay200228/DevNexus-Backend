@@ -51,7 +51,7 @@ export const getAuthenticatedUser = async (req, res) => {
       avatar: user.avatar,
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
-      // bookmarks: user.bookmarks,
+      following: user.following,
       bookmarks: user.bookmarks.map((bookmark) => ({
         _id: bookmark._id,
       })),
@@ -82,6 +82,7 @@ export const getSingleUser = async (req, res) => {
       avatar: user.avatar,
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
+      following: user.following,
     });
   } catch (err) {
     console.error('Error while fetching user:', err);
@@ -108,6 +109,7 @@ export const getSingleUserByUsername = async (req, res) => {
       avatar: user.avatar,
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
+      following: user.following,
     });
   } catch (err) {
     console.error('Error while fetching user:', err);
@@ -221,5 +223,46 @@ export const updateAuthenticatedUser = async (req, res) => {
   } catch (err) {
     console.error('Error while updating user:', err);
     return res.status(500).json({ error: 'Server Error' });
+  }
+};
+
+// Follwer User
+export const followUser = async (req, res) => {
+  const userId = req.userId;
+  const { followUserId } = req.body;
+
+  try {
+    // Check if the user is already following the target user
+    const user = await User.findById(userId);
+    if (user.following.includes(followUserId)) {
+      return res.status(400).json({ error: 'User is already being followed' });
+    }
+
+    // Update the followersCount for the user being followed
+    await User.findByIdAndUpdate(followUserId, { $inc: { followersCount: 1 } });
+
+    // Add the follower to the user's following array
+    await User.findByIdAndUpdate(userId, { $push: { following: followUserId } });
+
+    res.status(200).json({ message: 'User followed successfully' });
+  } catch (error) {
+    console.error('Error while following user:', error);
+    res.status(500).json({ error: 'Server Error' });
+  }
+};
+
+
+// Unfollow user
+export const unfollowUser = async (req, res) => {
+  const userId = req.userId;
+  const { unfollowUserId } = req.body;
+
+  try {
+    await User.findByIdAndUpdate(userId, { $pull: { following: unfollowUserId } });
+
+    res.status(200).json({ message: 'User unfollowed successfully' });
+  } catch (error) {
+    console.error('Error while unfollowing user:', error);
+    res.status(500).json({ error: 'Server Error' });
   }
 };

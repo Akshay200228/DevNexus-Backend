@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteAvatar, getAllUsers, getAuthenticatedUser, getSingleUser, getSingleUserByUsername, updateAuthenticatedUser, uploadAvatar } from '../controllers/userController.js';
+import { deleteAvatar, followUser, getAllUsers, getAuthenticatedUser, getSingleUser, getSingleUserByUsername, unfollowUser, updateAuthenticatedUser, uploadAvatar } from '../controllers/userController.js';
 import { loginUser, createUser, resendOTP, verifyOTP } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 
@@ -32,5 +32,10 @@ router.post('/resend-otp', resendOTP);
 
 router.post('/verify-otp', verifyOTP);
 
+// Follow user route
+router.post('/follow', authenticate, followUser);
+
+// Unfollow user route
+router.post('/unfollow', authenticate, unfollowUser);
 
 export default router;
