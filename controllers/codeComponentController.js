@@ -83,18 +83,19 @@ export const getCodeComponentsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
         const codeComponents = await CodeComponent.find({ category })
-        .sort({ _id: -1 });
+            .sort({ _id: -1 });
         res.status(200).json(codeComponents);
     } catch (error) {
         res.status(500).json({ error: 'Server Error' });
     }
 };
+
 // Paginated code comp category
 // export const getCodeComponentsByCategory = async (req, res) => {
 //     try {
 //         const { category } = req.params;
 //         const page = req.query.page || 1;
-//         const limit = 12; // Number of items per page
+//         const limit = 6; // Number of items per page
 //         const skip = (page - 1) * limit;
 //         const codeComponents = await CodeComponent.find({ category })
 //             .sort({ _id: -1 })
@@ -128,23 +129,25 @@ export const getSingleCodeComponent = async (req, res) => {
 export const getCodeComponentsByIds = async (req, res) => {
     try {
         const { codeComponentIds } = req.params;
+        const { page } = req.query;
+        const limit = 12; // Number of items per page
 
         if (!codeComponentIds) {
             return res.status(400).json({ error: 'Code component IDs are missing' });
         }
 
-        // Split the comma-separated string of IDs into an array
         const idsArray = codeComponentIds.split(',');
+        const skip = (page - 1) * limit;
 
-        // Use the $in operator to find code components with matching IDs and sort in descending order
-        const codeComponents = await CodeComponent.find({ _id: { $in: idsArray } }).sort({ _id: -1 });
+        const codeComponents = await CodeComponent.find({ _id: { $in: idsArray } })
+            .sort({ _id: -1 })
+            .skip(skip)
+            .limit(limit);
 
-        // Check if any code components are found
         if (!codeComponents || codeComponents.length === 0) {
             return res.status(404).json({ error: 'Code components not found' });
         }
 
-        // Return the found code components as a JSON response
         res.status(200).json(codeComponents);
     } catch (error) {
         // Handle any errors that occur during the process
