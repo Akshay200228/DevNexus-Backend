@@ -106,6 +106,7 @@ export const verifyOTP = async (req, res) => {
         expiresIn: '7d', // Token expiration time
       }
     );
+    console.log("Save Token: ", token)
 
     res.status(200).json({
       message: 'OTP verified successfully',
