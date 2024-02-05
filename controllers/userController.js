@@ -49,6 +49,11 @@ export const getAuthenticatedUser = async (req, res) => {
       email: user.email,
       username: user.username,
       avatar: user.avatar,
+      portfolio: user.portfolio,
+      linkedin: user.linkedin,
+      github: user.github,
+      cityName: user.cityName,
+      stateName: user.stateName,
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
       following: user.following,
@@ -83,6 +88,11 @@ export const getSingleUser = async (req, res) => {
       email: user.email,
       username: user.username,
       avatar: user.avatar,
+      portfolio: user.portfolio,
+      linkedin: user.linkedin,
+      github: user.github,
+      cityName: user.cityName,
+      stateName: user.stateName,
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
       following: user.following,
@@ -111,6 +121,11 @@ export const getSingleUserByUsername = async (req, res) => {
       email: user.email,
       username: user.username,
       avatar: user.avatar,
+      portfolio: user.portfolio,
+      linkedin: user.linkedin,
+      github: user.github,
+      cityName: user.cityName,
+      stateName: user.stateName,
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
       following: user.following,
@@ -204,13 +219,13 @@ const getPublicIdFromUrl = (url) => {
 // Update authenticated user details
 export const updateAuthenticatedUser = async (req, res) => {
   const userId = req.userId;
-  const { username, name } = req.body; // Extract new username and name from request body
+  const { name, portfolio, linkedin, github, cityName, stateName } = req.body;
 
   try {
     // Find and update the user
     const user = await User.findByIdAndUpdate(
       userId,
-      { username, name },
+      { name, portfolio, linkedin, github, cityName, stateName },
       { new: true }
     );
 

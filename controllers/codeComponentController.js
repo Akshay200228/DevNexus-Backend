@@ -15,11 +15,6 @@ export const createCodeComponent = async (req, res) => {
         // Get the user ID and avatar of the creator from the request
         const { userId } = req;
 
-        // Ensure userAvatar is not undefined
-        // if (userAvatar === undefined) {
-        //     return res.status(500).json({ error: 'User avatar is undefined' });
-        // }
-
         // Use populate to get the user details, including avatar
         const user = await User.findById(userId).select('avatar').exec();
 
@@ -34,7 +29,6 @@ export const createCodeComponent = async (req, res) => {
             code,
             category,
             createdBy: userId,
-            // creatorAvatar: userAvatar,
             creatorAvatar: user.avatar,
         });
         // Save the new code component to the database

@@ -56,6 +56,26 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
 
+  portfolio: {
+    type: String,
+  },
+
+  linkedin: {
+    type: String,
+  },
+
+  github: {
+    type: String,
+  },
+
+  cityName: {
+    type: String,
+  },
+
+  stateName: {
+    type: String,
+  },
+
   // Add any user-specific fields here
   codeComponents: [
     {
