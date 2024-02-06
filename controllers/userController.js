@@ -236,6 +236,11 @@ export const updateAuthenticatedUser = async (req, res) => {
       email: user.email,
       username: user.username,
       avatar: user.avatar,
+      portfolio: user.portfolio,
+      linkedin: user.linkedin,
+      github: user.github,
+      cityName: user.cityName,
+      stateName: user.stateName,
       codeComponents: user.codeComponents,
       webTemplates: user.webTemplates,
     });
