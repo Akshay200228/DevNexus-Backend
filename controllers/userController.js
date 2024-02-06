@@ -219,6 +219,7 @@ const getPublicIdFromUrl = (url) => {
 // Update authenticated user details
 export const updateAuthenticatedUser = async (req, res) => {
   const userId = req.userId;
+  console.log("updateAuthenticatedUser: ", userId)
   const { name, portfolio, linkedin, github, cityName, stateName } = req.body;
 
   try {
@@ -233,16 +234,11 @@ export const updateAuthenticatedUser = async (req, res) => {
     return res.status(200).json({
       _id: user._id,
       name: user.name,
-      email: user.email,
-      username: user.username,
-      avatar: user.avatar,
       portfolio: user.portfolio,
       linkedin: user.linkedin,
       github: user.github,
       cityName: user.cityName,
-      stateName: user.stateName,
-      codeComponents: user.codeComponents,
-      webTemplates: user.webTemplates,
+      stateName: user.stateName
     });
   } catch (err) {
     console.error('Error while updating user:', err);
