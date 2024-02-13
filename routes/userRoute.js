@@ -8,6 +8,7 @@ const router = express.Router();
 // Get all users (protected route)
 router.get('/', getAllUsers);
 
+
 //GET
 router.get("/authUser", authenticate, getAuthenticatedUser);
 

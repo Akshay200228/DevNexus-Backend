@@ -16,7 +16,7 @@ cloudinary.config({
 // Get all users
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().sort({ createdAt: -1 }).limit(10);
     if (users.length === 0) {
       return res.status(404).json({ message: 'No Users Found!' });
     }
@@ -219,7 +219,6 @@ const getPublicIdFromUrl = (url) => {
 // Update authenticated user details
 export const updateAuthenticatedUser = async (req, res) => {
   const userId = req.userId;
-  console.log("updateAuthenticatedUser: ", userId)
   const { name, portfolio, linkedin, github, cityName, stateName } = req.body;
 
   try {

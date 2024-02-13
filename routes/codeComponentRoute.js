@@ -35,5 +35,4 @@ router.put('/update/:codeComponentId', authenticate, updateCodeComponent);
 // Delete a code component by ID
 router.delete('/delete/:codeComponentId', authenticate, deleteCodeComponent);
 
-
 export default router;
