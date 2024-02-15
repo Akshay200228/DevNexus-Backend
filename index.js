@@ -24,6 +24,14 @@ app.use(cors());
 // Middleware to parse JSON requests
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send(`
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+        <h1>Welcome to my DevNexus Server</h1>
+      </div>
+    `);
+});
+
 // users routes
 app.use('/api/users', userRoutes);
 
