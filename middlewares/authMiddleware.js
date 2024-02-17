@@ -4,7 +4,6 @@ import User from '../models/User.js';
 
 export const authenticate = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
-    // console.log("Token here: ", token)
 
     if (!token) {
         console.log('No token provided');
@@ -23,10 +22,8 @@ export const authenticate = async (req, res, next) => {
 
         // Attach user details to the request object
         req.userId = decoded.userId;
-        // req.userAvatar = user.avatar;
 
         next();
-        // console.log('Authentication successful', decoded);
     } catch (err) {
         console.log('Error decoding token:', err);
         res.status(401).json({ message: 'Authentication failed' });

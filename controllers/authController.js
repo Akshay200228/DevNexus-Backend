@@ -230,3 +230,56 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// Forgot Password - Send OTP
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const { otp, expirationTime } = generateOTP();
+    user.otp = otp;
+    user.otpExpiration = expirationTime;
+
+    // Send OTP via email
+    sendOTPEmail(user.email, otp);
+
+    // Update user document in the database with the new OTP
+    await user.save();
+
+    res.status(200).json({ message: 'OTP sent successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server Error' });
+  }
+};
+
+// Reset Password - Verify OTP and Update Password
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    const user = await User.findOne({ email, otp });
+
+    if (!user || user.otp !== otp || user.otpExpiration < new Date()) {
+      return res.status(401).json({ error: 'Invalid or expired OTP' });
+    }
+
+    // Hash the new password
+    user.password = await bcrypt.hash(newPassword, 10);
+
+    // Clear the OTP after successful password reset
+    user.otp = undefined;
+    user.otpExpiration = undefined;
+
+    // Save the updated user document
+    await user.save();
+
+    res.status(200).json({ message: 'Password reset successful' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server Error' });
+  }
+};
