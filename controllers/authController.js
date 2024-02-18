@@ -12,7 +12,7 @@ const jwtTokenUser = process.env.JWT_SECRET;
 const generateOTP = () => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const expirationTime = new Date();
-  expirationTime.setMinutes(expirationTime.getMinutes() + 10); // Set expiration time to 10 minutes from now
+  expirationTime.setMinutes(expirationTime.getMinutes() + 2); // Set expiration time to 2 minutes from now
   return { otp, expirationTime };
 };
 
