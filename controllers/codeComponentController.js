@@ -48,7 +48,8 @@ export const createCodeComponent = async (req, res) => {
 export const getAllCodeComponents = async (req, res) => {
     try {
         const page = req.query.page || 1;
-        const limit = 12; // Number of items per page
+        const limit = req.query.limit || 0; 
+        // const limit = req.query.limit || Number.MAX_SAFE_INTEGER; 
         const skip = (page - 1) * limit;
         const titleQuery = req.query.title || '';
 
