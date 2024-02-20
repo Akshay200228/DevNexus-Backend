@@ -49,7 +49,6 @@ export const getAllCodeComponents = async (req, res) => {
     try {
         const page = req.query.page || 1;
         const limit = req.query.limit || 0; 
-        // const limit = req.query.limit || Number.MAX_SAFE_INTEGER; 
         const skip = (page - 1) * limit;
         const titleQuery = req.query.title || '';
 
@@ -64,8 +63,8 @@ export const getAllCodeComponents = async (req, res) => {
         const codeComponents = await CodeComponent.find(searchCriteria)
             .sort({ createdAt: -1 }) // Sorting in descending order based on createdAt
             .skip(skip)
-            .limit(limit);
-
+            .limit(limit)
+            
         res.status(200).json(codeComponents);
     } catch (error) {
         console.error(error);

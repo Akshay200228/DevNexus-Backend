@@ -16,7 +16,7 @@ cloudinary.config({
 // Get all users
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().sort({ createdAt: -1 }).limit(10);
+    const users = await User.find().sort({ createdAt: -1 });
     if (users.length === 0) {
       return res.status(404).json({ message: 'No Users Found!' });
     }
@@ -259,6 +259,9 @@ export const followUser = async (req, res) => {
 
     // Add the follower to the user's following array
     await User.findByIdAndUpdate(userId, { $push: { following: followUserId } });
+
+    // Add the follower to the target user's followers array
+    await User.findByIdAndUpdate(followUserId, { $push: { followers: userId } });
 
     res.status(200).json({ message: 'User followed successfully' });
   } catch (error) {
