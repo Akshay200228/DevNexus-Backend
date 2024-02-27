@@ -4,9 +4,13 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { OAuth2Client } from 'google-auth-library';
+import { generateUsername } from '../custome-func/generateUsername.js';
+import { generateRandomPassword } from '../custome-func/generateRandomPassword.js';
 
 dotenv.config();
 const jwtTokenUser = process.env.JWT_SECRET;
+// const jwtTokenUser = "2e60dd7b5e7a86585a8a5e40bf7218e6c3e5c940294b7be982a4ec408a2e41347";
 
 // Function to generate a random OTP with expiration time (10 minutes)
 const generateOTP = () => {
@@ -192,11 +196,6 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Check if the user is verified
-    // if (!user.verified) {
-    //   return res.status(401).json({ error: 'User not verified' });
-    // }
-
     // Generate and send an authentication token (e.g., JWT) to the client
     const token = jwt.sign(
       {
@@ -228,6 +227,88 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ error: 'Server Error' });
   }
 };
+
+
+export const loginWithGoogle = async (req, res) => {
+  try {
+    console.log("Start Google authentication");
+    const { idToken } = req.body;
+
+    // Replace 'YOUR_GOOGLE_CLIENT_ID' with your actual Google client ID
+    const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+
+    // Verify idToken with Google
+    const client = new OAuth2Client(CLIENT_ID);
+    const ticket = await client.verifyIdToken({
+      idToken: idToken,
+      audience: CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name } = payload;
+
+    // Check if the user already exists in the database
+    let user = await User.findOne({ email });
+
+    // If user doesn't exist, create a new user with a random username based on email
+    if (!user) {
+      // Generate a random username based on the user's name and email
+      const username = generateUsername(name, email);
+      // Generate a random password that fulfills the criteria
+      const password = generateRandomPassword();
+
+      user = new User({
+        name: name,
+        email: email,
+        password: password,
+        username: username,
+        googleId: googleId
+      });
+      await user.save();
+    }
+
+    // Generate JWT token with only userId in the payload
+    const token = jwt.sign(
+      {
+        userId: user._id
+      },
+      jwtTokenUser,
+      {
+        expiresIn: '7d',
+      }
+    );
+
+    // Send the token in the response
+    res.status(200).json({
+      message: 'Google Login successful',
+      token
+    });
+
+    console.log("user google: ", user._id)
+    console.log("Done login google")
+  } catch (error) {
+    console.error("Error during Google authentication:", error);
+    res.status(500).json({ error: 'Server Error' });
+  }
+};
+
+
+// export const loginWithGoogle = async (req, res) => {
+//   try {
+//     console.log("Start Google authentication");
+//     const { email } = req.body;
+//     console.log("Received email:", email);
+
+//     // Here you can continue with your Google authentication logic or any other processing you need to perform
+
+//     res.status(200).json({ message: "Email received successfully" });
+//   } catch (error) {
+//     console.error("Error during Google authentication:", error);
+//     res.status(500).json({ error: 'Server Error' });
+//   }
+// };
+
+
 
 // Forgot Password - Send OTP
 export const forgotPassword = async (req, res) => {

@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema({
     default: false, // Set to false by default, indicating the user is not verified
   },
 
+  googleId: {
+    type: String,
+    unique: true, // Ensure uniqueness of Google ID
+  },
+
   username: {
     type: String,
     required: [true, 'Username is required!'],

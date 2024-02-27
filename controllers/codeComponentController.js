@@ -180,7 +180,6 @@ export const updateCodeComponent = async (req, res) => {
         }
 
         res.status(200).json(updatedCodeComponent);
-        console.log("Done update")
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server Error' });

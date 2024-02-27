@@ -1,6 +1,6 @@
 import express from 'express';
 import { deleteAvatar, followUser, getAllUsers, getAuthenticatedUser, getSingleUser, getSingleUserByUsername, unfollowUser, updateAuthenticatedUser, uploadAvatar } from '../controllers/userController.js';
-import { loginUser, createUser, resendOTP, verifyOTP, resetPassword, forgotPassword } from '../controllers/authController.js';
+import { loginUser, createUser, resendOTP, verifyOTP, resetPassword, forgotPassword, loginWithGoogle } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -19,6 +19,7 @@ router.get('/:username', getSingleUserByUsername);
 // Create a new user
 router.post('/signup', createUser);
 router.post('/login', loginUser);
+router.post('/google', loginWithGoogle);
 
 // Forget Password
 router.post('/forgot-password', forgotPassword);

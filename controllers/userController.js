@@ -29,7 +29,11 @@ export const getAllUsers = async (req, res) => {
 
 // Get the authenticated user's details with bookmarks
 export const getAuthenticatedUser = async (req, res) => {
+  console.log("start: ")
+
   const userId = req.userId;
+  // const googleId = req.googleId;
+  // console.log("googleId: ", googleId)
 
   try {
     // Use populate to get bookmarks details for the authenticated user
@@ -46,6 +50,7 @@ export const getAuthenticatedUser = async (req, res) => {
     return res.status(200).json({
       _id: user._id,
       name: user.name,
+      googleId: user.googleId,
       email: user.email,
       username: user.username,
       avatar: user.avatar,
